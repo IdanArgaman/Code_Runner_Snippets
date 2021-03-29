@@ -88,8 +88,8 @@ export default [{
     },
     {
         "categoryId": CodeTypesEnum.PATTERNS,
-        "title": "Meomize at the prototype level",
-        "description": "",
+        "title": "Private members simulation",
+        "description": "Simluate private instance members by a single shared WeakMap resource",
         "code": () => {
             var Thing;
 
@@ -171,7 +171,7 @@ export default [{
     {
         categoryId: CodeTypesEnum.PATTERNS,
         title: "Timed out promise",
-        description: "Simulating a times out promise using Promise.race",
+        description: "Simulating a timed out promise using Promise.race",
         code: () => {
             // Wrap "setTimeout" in a promise such that if
             // the timeout completes, the promise is rejected
@@ -295,7 +295,7 @@ export default [{
                 // Note that the accmulator is an empty array
             }, []);
 
-            doubledOver50; // [60, 80]
+            console.log(doubledOver50); // [60, 80]
         }
     },
     {
@@ -307,7 +307,7 @@ export default [{
             var carsObj = cars.reduce(function (obj, name) {
                 obj[name] = obj[name] ? ++obj[name] : 1;
                 return obj;
-                // Note that we initialize the accmualtor to be an empty object
+                // Note that we initialize the accumulator to be an empty object
             }, {});
 
             console.log(carsObj); // => { BMW: 2, Benz: 2, Tesla: 1, Toyota: 1 }
