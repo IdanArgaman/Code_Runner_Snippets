@@ -1,10 +1,11 @@
 /* eslint-disable */
 
 const CodeTypesEnum = {
-    ARRAYS: "Arrays",
+    ARRAYS: "ARRAYS",
     TRICKS: "Tricks",
     PATTERNS: "PATTERNS",
-    ES6: 'ES6'
+    ES6: 'ES6',
+    BLACK_BELT: 'BLACK-BELT'
 }
 
 export default [{
@@ -476,6 +477,197 @@ export default [{
 
             // Applying mixins on Person        
             class Employee extends Storage(Validation(Person)) {}
+        }
+    },
+    {
+        categoryId: CodeTypesEnum.PATTERNS,
+        title: "Native currying with bind",
+        description: "Using bind we can also not just enforce 'this' instance but also supply arguments with values",
+        code: () => {
+            /* 
+                JS supports native currying pattern:
+                ------------------------------------
+                We can use of bind() is to make a function with pre-specified initial arguments. 
+                These arguments (if any) follow the provided this value and are then inserted at 
+                the start of the arguments passed to the target function, followed by the arguments
+                passed to the bound function, whenever the bound function is called
+            */
+
+            function list() {
+                return Array.prototype.slice.call(arguments);
+            }
+
+            // Regular usage
+            console.log(list(1, 2, 3)); // [1, 2, 3]
+
+            // Create a function with a PRESET leading argument
+            // The first argument to "leadingThirtysevenList" is 37 NO matter what we provide
+            var leadingThirtysevenList = list.bind(null, 37);
+
+            console.log(leadingThirtysevenList()); // [37]
+            console.log(leadingThirtysevenList(1, 2, 3)); // [37, 1, 2, 3]
+
+            /*---------------------*/
+
+            function addArguments(arg1, arg2) {
+                return arg1 + arg2
+            }
+
+            console.log(addArguments(1, 2));
+
+            var addThirtySeven = addArguments.bind(null, 37);
+
+            // 37 + 5 = 42 => 5 is assigned to "arg2" argument 
+            console.log(addThirtySeven(5));
+
+            // 37 + 5 = 42 =>  5 is assigned to "arg2" argument, the second argument is ignored
+            console.log(addThirtySeven(5, 10));
+        }
+    },
+    {
+        categoryId: CodeTypesEnum.PATTERNS,
+        title: "Singleton",
+        description: "",
+        code: () => {
+            var Singleton = (function () {
+                var instance;
+
+                function createInstance() {
+                    var object = new Object("I am the instance");
+                    return object;
+                }
+
+                return {
+                    getInstance: function () {
+                        if (!instance) {
+                            instance = createInstance();
+                        }
+                        return instance;
+                    }
+                };
+            })();
+
+            var instance1 = Singleton.getInstance();
+            var instance2 = Singleton.getInstance();
+            console.log("Same instance? " + (instance1 === instance2));
+        }
+    },
+    {
+        categoryId: CodeTypesEnum.ARRAYS,
+        title: "Array tricks",
+        description: "We are exploiting the fact that apply takes an array of arguments",
+        code: () => {
+            var array = ['a', 'b'];
+            var elements = [0, 1, 2];
+
+            // Concat
+
+            // Because "apply" accepts an array to be provided as a second paramenter
+            // the elements array are treated as 3 different arguments that are just enclosed
+            // into an array.  
+
+            array.push.apply(array, elements);
+            console.log(array);
+
+            // Min/Max
+            var numbers = [5, 6, 2, 3, 7];
+
+            console.log(Math.max.apply(null, numbers));
+            console.log(Math.min.apply(null, numbers));
+        }
+    },
+    {
+        categoryId: CodeTypesEnum.BLACK_BELT,
+        title: "Binding the apply function itself",
+        description: "What happens when we bind the apply function itself?",
+        code: () => {
+            /*
+                How "apply" works? apply is a function that invokes the function that it was called from.
+                We may guess that apply invokes the function it is applied on by accessing that function using "this"
+                inside "apply" implementation. So:
+                
+                slice.apply -> inside "apply" body, "slice" is accessed by using "this", so we can guess that
+                "slice" gets invoked by calling "this()".
+
+                We should not forget "apply" main purpose, to allow "this" and arguments binding.
+                
+            */
+
+            var myFunc = function () {
+                console.log('inside myFunc', this, JSON.stringify(this));
+            }
+
+            // Let's bind apply to myFunc, so we new got a new "apply" function that inside it,
+            // ---> "this" <--- will be myFunc!
+
+            var apply_bound_to_my_func = Function.prototype.apply.bind(myFunc);
+
+            // apply_bound_to_my_func is the "apply" function in disguise, we still need provide it with a 
+            // "this" argument as "apply" expects.
+
+            apply_bound_to_my_func({
+                length: 2,
+                0: "idan",
+                1: "argaman"
+            });
+
+            /*
+                Summary:
+                "apply" executes the function accessed by "this" in its body,
+                we bound "apply" to myFunc so "this" is myFunc inside apply's body.
+                "apply" will execute myFunc by calling this().
+                Apply gets a first argument to serve as "this" inside the function it executes. 
+                So "this" inside myFunc (this()) is the object we passed.
+            */
+        }
+    },
+    {
+        categoryId: CodeTypesEnum.BLACK_BELT,
+        title: "Creating our own version of call",
+        description: "",
+        code: () => {
+            // We need to assign to assign "someOtherThis" as "this" in the function's
+            // body. So we attach the function as a property of "someOtherThis" and
+            // call it from "someOtherThis" as a method call.
+
+            Function.prototype.myOwnCall = function (someOtherThis, ...otherArgs) {
+
+                const symbol1 = Symbol();
+
+                // "this" is the function myOwnCall was invoked from, which is the function
+                // we want to invoke with the "this" in it pointing to someOtherThis.
+
+                someOtherThis[symbol1] = this;
+
+                // Before ES6 we had no spread operator, so we needed to build a comman separted list of arguments,
+                // and invoke the function using eval!
+
+                /*
+                    var args = [];
+
+                    for (var i = 1, len = arguments.length; i < len; i++) {
+                    args.push("arguments[" + i + "]");
+                    }
+
+                    const result = eval("someOtherThis[symbol1](" + args + ")");
+                */
+
+                // Invoking the function stored at "symbol1" through "someOtherThis"
+                // ensures the "this" inside that function will be "someOtherThis"
+
+                const result = someOtherThis[symbol1](...otherArgs);
+                delete someOtherThis[symbol1];
+                return result;
+            }
+
+            function testme() {
+                console.log(`this.name: ${this.name}, arguments: ${JSON.stringify(arguments)}`);
+            }
+
+            testme.myOwnCall({
+                name: 'Idan',
+                hobby: 'Coding'
+            }, 1, 2, 3);
         }
     }
 ]
