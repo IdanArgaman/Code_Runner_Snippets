@@ -714,5 +714,49 @@ export default [{
                 y: 2
             }, 3, 4));
         }
+    },
+    {
+        categoryId: CodeTypesEnum.BLACK_BELT,
+        title: "Our own version of bind",
+        description: "",
+        code: () => {
+            Function.prototype.myOwnBind = function (newThis, ...otherArgs) {
+
+                // Good error checking!
+                if (typeof this !== "function") {
+                    throw new Error(this + "cannot be bound as it's not callable");
+                }
+
+                // The original function to call
+                var boundTargetFunction = this;
+
+                // Before ES6:
+                // Convert arguments to a real array and omit the first item (which is "this")
+                // var boundArguments = Array.prototype.slice.call(arguments, 1);
+
+                return function boundFunction(...newArgs) {
+
+                    // Before ES6
+                    // here the arguments refer to the second time when we call the target function returned from bind
+                    //var targetArguments = Array.prototype.slice.call(arguments);
+
+                    return boundTargetFunction.apply(
+                        newThis,
+                        otherArgs.concat(newArgs)
+                    );
+                };
+            };
+
+            function test(a, b, c) {
+                return this.x + this.y + a + b + c;
+            }
+
+            const newTestfn = test.myOwnBind({
+                x: 1,
+                y: 2
+            }, 3, 4);
+
+            console.log(newTestfn(5));
+        }
     }
 ]
