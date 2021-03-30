@@ -637,7 +637,7 @@ export default [{
                 // "this" is the function myOwnCall was invoked from, which is the function
                 // we want to invoke with the "this" in it pointing to someOtherThis.
 
-                someOtherThis[symbol1] = this;
+                someOtherThis[symbol1] = this || global;;
 
                 // Before ES6 we had no spread operator, so we needed to build a comman separted list of arguments,
                 // and invoke the function using eval!
@@ -668,6 +668,51 @@ export default [{
                 name: 'Idan',
                 hobby: 'Coding'
             }, 1, 2, 3);
+        }
+    },
+    {
+        categoryId: CodeTypesEnum.BLACK_BELT,
+        title: "Creating our own version of apply",
+        description: "",
+        code: () => {
+            Function.prototype.myOwnApply = function (someOtherThis, ...otherArgs) {
+                someOtherThis = someOtherThis || global;
+
+                const symbol1 = Symbol();
+
+                someOtherThis[symbol1] = this; // 'this" === the function "myOwnApply" was called on!
+                var result = null;
+
+                // Before ES6 we had no spread operator, so we needed to build a comman separted list of arguments,
+                // and invoke the function using eval!
+                /*
+                if (!arr) {
+                    // Direct invoke instead of "eval" if there are no arguments
+
+                    // Invoking the function stored in "symbol1' (which is the function "myOwnApply" was called on) through an object,
+                    // makes the "this" value inside that function to be that object!
+                    result = someOtherThis[symbol1]();
+                } else {
+                    // Use "eval" to invoke to command string
+                    for (let i = 1, len = arr.length; i < len; i++) {
+                        args.push("arr[" + i + "]");
+                    }
+                    result = eval("someOtherThis[symbol1](" + args + ")");
+                }*/
+
+                result = someOtherThis[symbol1](...otherArgs);
+                delete someOtherThis[symbol1];
+                return result;
+            };
+
+            function test(a, b) {
+                return this.x + this.y + a + b;
+            }
+
+            console.log(test.myOwnApply({
+                x: 1,
+                y: 2
+            }, 3, 4));
         }
     }
 ]
