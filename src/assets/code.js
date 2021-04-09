@@ -401,6 +401,15 @@ export default [{
             })();
 
             (() => {
+                //////////////////
+                /* Native Range */
+                //////////////////
+
+                [...Array(5).keys()];
+
+            })();
+
+            (() => {
                 ////////////////////////////
                 /* Dynamic Property Names */
                 ////////////////////////////
@@ -757,6 +766,38 @@ export default [{
             }, 3, 4);
 
             console.log(newTestfn(5));
+        }
+    },
+    {
+        categoryId: CodeTypesEnum.PATTERNS,
+        title: "Creating a call spy",
+        description: "Create a mechanism that spies of function and store its calls",
+        code: () => {
+            // This is the function we want to spy on
+            function work(a, b) {
+                console.log(a + b);
+            }
+
+            // The spy function gets this function and return a new function with a
+            // STATIC calls property on it!
+            function spy(fn) {
+                function wrapper(...args) {
+                    wrapper.calls.push([...args]); // Push the calls
+                    return fn.apply(this, args); // Call the original function
+                }
+                wrapper.calls = []; // STATIC property to save calls
+
+                return wrapper;
+            }
+
+            spiedWork = spy(work);
+
+            spiedWork(1, 2); // 3
+            spiedWork(4, 5); // 9
+
+            for (let args of spiedWork.calls) {
+                console.log('call:' + args.join()); // "call:1,2", "call:4,5"
+            }
         }
     }
 ]
