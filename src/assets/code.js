@@ -410,6 +410,25 @@ export default [{
             })();
 
             (() => {
+                //////////////////
+                /* Native Range */
+                //////////////////
+
+                [...Array(5).keys()];
+
+            })();
+
+            (() => {
+                // Flattening an array with reduce
+                [
+                    [1, 2, 3],
+                    [4, 5],
+                    [6, 7, 8, 9]
+                ].reduce((arr, subArr) => arr.concat(subArr), []);
+
+            })
+
+            (() => {
                 ////////////////////////////
                 /* Dynamic Property Names */
                 ////////////////////////////
