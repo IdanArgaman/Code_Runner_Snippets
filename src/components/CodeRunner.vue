@@ -38,14 +38,19 @@
 </template>
 
 <script>
-import codeItems from "../assets/code.js";
 import _ from "lodash";
 
 export default {
   name: "CodeRunner",
+  props: {
+    codeBase: {
+      type: String,
+      required: true,
+    },
+  },
   data: function () {
     return {
-      codeItems: codeItems,
+      codeItems: null,
       results: {},
     };
   },
@@ -82,8 +87,23 @@ export default {
 
       console.log = origLog;
     },
+     async loadCodeBase(codeBase) {
+      try {
+        // this.codeItems = (await import(`../assets/algorithms`)).default;
+        this.codeItems = (await import(`../assets/${codeBase}`)).default;
+      } catch (e) {
+        this.codeItems = [];
+      }
+    },
   },
-  mounted() {},
+  watch: {
+    $route(to) {
+      this.loadCodeBase(to.params.codeBase);
+    },
+  },
+  mounted() {
+    this.loadCodeBase(this.$route.params.codeBase);
+  },
 };
 </script>
 

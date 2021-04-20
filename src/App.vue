@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import CodeRunner from "./components/CoderRunner.vue";
+import CodeRunner from "./components/CodeRunner.vue";
 
 export default {
   name: "CodeRunnerApp",
