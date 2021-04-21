@@ -410,15 +410,6 @@ export default [{
             })();
 
             (() => {
-                //////////////////
-                /* Native Range */
-                //////////////////
-
-                [...Array(5).keys()];
-
-            })();
-
-            (() => {
                 // Flattening an array with reduce
                 [
                     [1, 2, 3],
