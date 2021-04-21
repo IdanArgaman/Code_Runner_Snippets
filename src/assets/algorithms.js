@@ -99,11 +99,69 @@ export default [{
     console.log(`max is ${result.max}, and it is found between ${result.startIdx} to ${result.endIdx} indexes`);
 
   }
+}, {
+  categoryId: CodeTypesEnum.ALGORITHM,
+  title: "Smart stack - a stack that tracks the minimum item within it and allow getting it O(1)",
+  description: `In addition to support of push, pop methods as a regular stack, the stack provides getMin
+    that returns the minimum item within it`,
+  code: () => {
+    const Stack = {
+      stackArr: [],
+      stackMinArr: [],
+
+      _last(arr) {
+        return arr.slice(-1)[0];
+      },
+
+      // Starting with ECMAScript 2015, a shorter syntax for method definitions 
+      // on objects initializers is introduced.
+      push(num) {
+        this.stackArr.push(num);
+        if (this.stackMinArr.length == 0 || num <= this._last(this.stackMinArr)) {
+          this.stackMinArr.push(num);
+        }
+      },
+
+      pop() {
+        const num = this.stackArr.pop();
+        if (num === this._last(this.stackMinArr)) {
+          this.stackMinArr.pop();
+        }
+      },
+
+      getMin() {
+        return this._last(this.stackMinArr);
+      }
+    }
+
+    Stack.push(5);
+    Stack.push(2);
+    Stack.push(3);
+    Stack.push(1);
+    Stack.push(4);
+    Stack.push(-1);
+    Stack.push(0);
+
+    console.log(`Stack minimum: ${Stack.getMin()}`);
+
+    Stack.pop();
+
+    console.log(`Stack minimum: ${Stack.getMin()}`);
+
+    Stack.pop();
+
+    console.log(`Stack minimum: ${Stack.getMin()}`);
+
+    Stack.pop();
+    Stack.pop();
+    Stack.pop();
+
+    console.log(`Stack minimum: ${Stack.getMin()}`);
+  }
 }]
 
 /*
 missing number 1...N - two versions: one that handles large number of items
-smart stack with getMin
 array sum until index + change item
 https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
 
