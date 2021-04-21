@@ -21,7 +21,7 @@
       >
         <div class="code-item-header">
           <h3>{{ codeItem.title }}</h3>
-          <p>{{ codeItem.description }}</p>
+          <p v-html="codeItem.description"></p>
         </div>
         <div class="code-item-body">
           <pre
