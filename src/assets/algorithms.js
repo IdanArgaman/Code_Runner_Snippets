@@ -154,10 +154,43 @@ export default [{
     console.log(`Pop : ${Stack.pop()}`);
     console.log(`Stack minimum: ${Stack.getMin()}`);
   }
+}, {
+  categoryId: CodeTypesEnum.ALGORITHM,
+  title: "Missing number in array from 1 to N",
+  description: "We get an array from 1 to N but with a missing number within, so we need to find it",
+  code: () => {
+    const arrWithMissingNumber = [1, 2, 3, 4, 5, 6, 8];
+
+    function findMissing(arrWithMissingNumber) {
+      // Naive method - may overflow for large array! 
+      let sum = 1;
+      let arraySum = 0;
+
+      for (let i = 0; i < arrWithMissingNumber.length; i++) {
+        sum += i + 2;
+        arraySum += arrWithMissingNumber[i];
+      }
+
+      console.log(`The missing number is: ${sum - arraySum}`);
+    }
+
+    function findMissingSmart(arrWithMissingNumber) {
+      let arraySum = 0;
+      let sum = 1;
+
+      for (let i = 0; i < arrWithMissingNumber.length; i++) {
+        sum += (i + 2) - arrWithMissingNumber[i];
+      }
+
+      console.log(`The missing number is (SMART): ${sum - arraySum}`);
+    }
+
+    findMissing(arrWithMissingNumber)
+    findMissingSmart(arrWithMissingNumber);
+  }
 }]
 
 /*
-missing number 1...N - two versions: one that handles large number of items
 array sum until index + change item
 https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
 
