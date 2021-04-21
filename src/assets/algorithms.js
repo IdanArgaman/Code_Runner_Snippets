@@ -10,7 +10,7 @@ export default [{
   "description": `Given an array, print the pairs that their sum gives a result equals to k.
     We can find different implementation here: https://www.geeksforgeeks.org/count-pairs-with-given-sum/`,
   "code": () => {
-    const sampleArray = [1, 5, 3, 3, 2, 2];
+    const sampleArray = [1, 5, 1, 5, 3, 3, 4, 2, 2];
     const k = 6;
 
     function findPairs(sampleArray, k) {
@@ -49,7 +49,6 @@ export default [{
 
       Object.keys(pairs).forEach(keyPair => console.log(keyPair + `: ${pairs[keyPair] / 2}`));
     }
-
 
     findPairs(sampleArray, k);
 
