@@ -188,10 +188,30 @@ export default [{
     findMissing(arrWithMissingNumber)
     findMissingSmart(arrWithMissingNumber);
   }
+}, {
+  categoryId: CodeTypesEnum.ALGORITHM,
+  title: "Sub array sum problem",
+  description: `We need to easily find the sum of a sub array, the problem is that the array
+    can be updated and we must do the update and retrieval efficiently.<br/>
+    We can solve the problem in many ways:
+    <ul>
+      <li>
+       The naive way that calculates the sub sum every time.
+      </li>
+      <li>
+        A smarter way that stores suffers from updates, and a tree way
+      </li>
+      <li>
+        Using Fenwick tree that allows an efficient retrieval and update - O(log(n))
+      </li>
+    </ul>
+    `,
+  code: () => {
+
+  }
 }]
 
 /*
-array sum until index + change item
 https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
 
 ------------------------------------------------------------------
@@ -199,7 +219,6 @@ https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-a
 Minimum heap from React scheduler code:
 taken from (https://programmer.group/exploring-the-inner-of-react-postmessage-scheduler.html)
 Note the code is written in flow, so we must convert it to JS:
-
 
 type Heap = Array<Node>;
 type Node = {|
