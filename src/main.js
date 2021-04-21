@@ -15,10 +15,13 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-	routes: [
-		{ name: "code", path: '/code/:codeBase', component: CodeRunner, props: true },
-		{ path: '/', redirect: '/code/code' }
-	]
+	routes: [{
+		name: "code",
+		path: '/code/:codeBase',
+		props: true,
+		component: CodeRunner,
+
+	}]
 });
 
 Vue.use(VueHighlightJS, {
@@ -30,6 +33,6 @@ Vue.use(VueHighlightJS, {
 Vue.config.productionTip = false
 
 new Vue({
-  render: h => h(App),
-  router
+	render: h => h(App),
+	router
 }).$mount('#app')

@@ -1,12 +1,17 @@
 <template>
   <div class="code-container">
-    <div>
+    <div v-if="showCategories">
       <h1>Categories</h1>
       <div v-for="(codeItems, key, idx) in groupedCodeItems" :key="idx">
-        <a :href="'#section_' + key"> {{ key }}</a><br />
+        <a :href="'#section_' + key"> {{ key }}</a
+        ><br />
       </div>
     </div>
-    <div class="code-group" v-for="(codeItems, key, idx) in groupedCodeItems" :key="idx">
+    <div
+      class="code-group"
+      v-for="(codeItems, key, idx) in groupedCodeItems"
+      :key="idx"
+    >
       <h2 :id="'section_' + key">{{ key }}</h2>
       <div
         v-for="(codeItem, idx) in codeItems"
@@ -46,6 +51,11 @@ export default {
     codeBase: {
       type: String,
       required: true,
+    },
+    showCategories: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
   },
   data: function () {
@@ -87,7 +97,7 @@ export default {
 
       console.log = origLog;
     },
-     async loadCodeBase(codeBase) {
+    async loadCodeBase(codeBase) {
       try {
         // this.codeItems = (await import(`../assets/algorithms`)).default;
         this.codeItems = (await import(`../assets/${codeBase}`)).default;
@@ -98,6 +108,7 @@ export default {
   },
   watch: {
     $route(to) {
+      console.log(this.codeBase);
       this.loadCodeBase(to.params.codeBase);
     },
   },
@@ -137,5 +148,4 @@ export default {
   margin-bottom: 0px;
   text-decoration: underline;
 }
-
 </style>
