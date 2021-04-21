@@ -127,6 +127,8 @@ export default [{
         if (num === this._last(this.stackMinArr)) {
           this.stackMinArr.pop();
         }
+
+        return num;
       },
 
       getMin() {
@@ -143,19 +145,13 @@ export default [{
     Stack.push(0);
 
     console.log(`Stack minimum: ${Stack.getMin()}`);
-
-    Stack.pop();
-
+    console.log(`Pop : ${Stack.pop()}`);
     console.log(`Stack minimum: ${Stack.getMin()}`);
-
-    Stack.pop();
-
+    console.log(`Pop : ${Stack.pop()}`);
     console.log(`Stack minimum: ${Stack.getMin()}`);
-
-    Stack.pop();
-    Stack.pop();
-    Stack.pop();
-
+    console.log(`Pop : ${Stack.pop()}`);
+    console.log(`Pop : ${Stack.pop()}`);
+    console.log(`Pop : ${Stack.pop()}`);
     console.log(`Stack minimum: ${Stack.getMin()}`);
   }
 }]
