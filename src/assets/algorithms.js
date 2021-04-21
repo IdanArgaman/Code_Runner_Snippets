@@ -53,15 +53,58 @@ export default [{
     findPairs(sampleArray, k);
 
   }
+}, {
+  categoryId: CodeTypesEnum.ALGORITHM,
+  title: "Maximum sub array problem",
+  description: "Printing the maximum sub array sum and its start and end indexes",
+  code: () => {
+    const sampleArray = [-1, 5, -1, -5, 3, -3, 4, 2, 2, -8, 9, 1, 4, -3];
+
+    function maximumSubArray(arr) {
+      if (!arr.length) return;
+
+      let max = arr[0];
+      let startIdx = 0;
+      let endIdx = 0
+
+      let maxSoFar = Math.max(max, 0);
+      let tempStartIdx = maxSoFar > 0 ? 0 : null;
+
+      for (let i = 1; i < arr.length; i++) {
+        maxSoFar += arr[i];
+
+        if (tempStartIdx === null) {
+          tempStartIdx = i;
+        }
+
+        if (maxSoFar > max) {
+          max = maxSoFar;
+          endIdx = i;
+          startIdx = tempStartIdx;
+        }
+
+        if (maxSoFar <= 0) {
+          maxSoFar = 0;
+          tempStartIdx = null;
+        }
+      }
+
+      return {
+        max,
+        startIdx,
+        endIdx
+      };
+    }
+    const result = maximumSubArray(sampleArray);
+    console.log(`max is ${result.max}, and it is found between ${result.startIdx} to ${result.endIdx} indexes`);
+
+  }
 }]
 
-
 /*
-Kanden
 missing number 1...N - two versions: one that handles large number of items
 smart stack with getMin
 array sum until index + change item
-
 https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
 
 ------------------------------------------------------------------
@@ -158,6 +201,5 @@ function siftDown(heap, node, i) {
     }
   }
 }
-
 ------------------------------------------------------------------
 */
