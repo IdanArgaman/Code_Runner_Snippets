@@ -52,15 +52,11 @@ export default {
       type: String,
       required: true,
     },
-    showCategories: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
   },
   data: function () {
     return {
       codeItems: null,
+      showCategories: true,
       results: {},
     };
   },
@@ -107,13 +103,12 @@ export default {
   },
   watch: {
     $route(to) {
-      console.log(this.codeBase);
       this.loadCodeBase(to.params.codeBase);
       this.showCategories = !(to.query.showCategories === "false");
     },
   },
   mounted() {
-    this.loadCodeBase(this.$route.params.codeBase);
+    this.loadCodeBase(this.codeBase);
   },
 };
 </script>

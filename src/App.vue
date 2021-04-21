@@ -4,26 +4,18 @@
       <router-link :to="{ name: 'code', params: { codeBase: 'code' } }">
         ES6 Snippets
       </router-link>
-      <router-link
-        :to="{
-          path: '/code/algorithms/?showCategories=false',
-        }"
-      >
+      <router-link :to="{ path: '/code/algorithms/?showCategories=false' }">
         Algorithms
       </router-link>
     </nav>
-    <CodeRunner />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import CodeRunner from "./components/CodeRunner.vue";
-
 export default {
   name: "CodeRunnerApp",
-  components: {
-    CodeRunner,
-  },
+  components: {},
 };
 </script>
 

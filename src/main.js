@@ -20,7 +20,6 @@ const router = new VueRouter({
 		path: '/code/:codeBase',
 		props: true,
 		component: CodeRunner,
-
 	}]
 });
 
