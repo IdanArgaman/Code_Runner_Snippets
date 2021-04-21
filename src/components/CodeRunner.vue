@@ -99,7 +99,6 @@ export default {
     },
     async loadCodeBase(codeBase) {
       try {
-        // this.codeItems = (await import(`../assets/algorithms`)).default;
         this.codeItems = (await import(`../assets/${codeBase}`)).default;
       } catch (e) {
         this.codeItems = [];
@@ -110,6 +109,7 @@ export default {
     $route(to) {
       console.log(this.codeBase);
       this.loadCodeBase(to.params.codeBase);
+      this.showCategories = !(to.query.showCategories === "false");
     },
   },
   mounted() {

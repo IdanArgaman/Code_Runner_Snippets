@@ -4,7 +4,11 @@
       <router-link :to="{ name: 'code', params: { codeBase: 'code' } }">
         ES6 Snippets
       </router-link>
-      <router-link :to="{ name: 'code', params: { codeBase: 'algorithms' } }">
+      <router-link
+        :to="{
+          path: '/code/algorithms/?showCategories=false',
+        }"
+      >
         Algorithms
       </router-link>
     </nav>
