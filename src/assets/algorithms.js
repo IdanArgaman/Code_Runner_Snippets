@@ -208,8 +208,65 @@ export default [{
     `,
   code: () => {
 
+    function updateBIT(tree, arrayLength, index, val) {
+      // index in trr is 1 more than the index in arr
+      index = index + 1;
+
+      // Traverse all ancestors and add 'val'
+      while (index <= arrayLength) {
+        // Add 'val' to current node of BI Tree
+        tree[index] += val;
+
+        // Update index to that of parent in update View
+        index += index & (-index);
+      }
+    }
+
+    // Returns sum of arr[0..index]. This function assumes
+    // that the array is preprocessed and partial sums of
+    // array elements are stored in BITree[].
+    function getSum(tree, index) {
+      let sum = 0; // Iniialize result
+
+      // index in tree is 1 more than the index in arr
+      index = index + 1;
+
+      // Traverse ancestors of tree
+      while (index > 0) {
+        // Add current element of tree to sum
+        sum += tree[index];
+
+        // Move index to parent node in getSum View
+        index -= index & (-index);
+      }
+      return sum;
+    }
+
+    function constructBITree(arr) {
+
+      // Create and initialize the tree
+      const tree = new Array(arr.length + 1);
+      for (let i = 1; i <= arr.length; i++)
+        tree[i] = 0;
+
+      // Store the actual values in tree using update()
+      for (let i = 0; i < arr.length; i++)
+        updateBIT(tree, arr.length, i, arr[i]);
+
+      return tree;
+    }
+
+    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const tree = constructBITree(arr);
+
+    console.log(tree);
+    console.log("Sum [0..2]: " + getSum(tree, 2)); // 3 elements sum
+    console.log("Sum [0..8]: " + getSum(tree, 8)); // 9 elements sum
+    console.log("Sum [0..5]: " + getSum(tree, 5)); // 6 elements sum
   }
 }]
+
+// Find sub array with a given sum: https://www.geeksforgeeks.org/find-subarray-with-given-sum/
 
 /*
 https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
