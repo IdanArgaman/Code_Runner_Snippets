@@ -593,6 +593,11 @@ export default [{
 
             console.log(Math.max.apply(null, numbers));
             console.log(Math.min.apply(null, numbers));
+
+            // OR ES6 Way
+
+            console.log(Math.max(...numbers));
+            console.log(Math.min(...numbers));
         }
     },
     {
