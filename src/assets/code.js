@@ -2,13 +2,77 @@
 
 const CodeTypesEnum = {
   ARRAYS: "ARRAYS",
-  TRICKS: "Tricks",
+  TRICKS: "TRICKS",
   PATTERNS: "PATTERNS",
   ES6: "ES6",
   BLACK_BELT: "BLACK-BELT",
 };
 
 export default [
+  {
+    categoryId: CodeTypesEnum.BLACK_BELT,
+    title: "Promises sync",
+    description: `We have a some background operations that finish at different times,
+    we want to execute code when all of them gets finished!`,
+    code: () => {
+        const number_of_requests = 10;
+
+        // Background operation resolved within 1 second
+        const mkDb = () =>
+          new Promise((resolve) =>
+            setTimeout(() => resolve(), Math.floor(Math.random() * 1000))
+          );
+        
+        // A colsue - encapsulating a single promise that gets resolved
+        // only when the closure gets called a defined number of times!
+        const sync = ((num) => {
+          let internal_resolve = null;
+          let call_count = 0;
+
+          const internal_promise = new Promise(
+            // Saving the promise resolve function at the closure context 
+            resolve => internal_resolve = resolve
+          );
+        
+          return () => {
+            call_count++;
+            // Call number reached - resolve!
+            if (call_count === num) {
+              internal_resolve();
+            }
+        
+            // return the closure promise!
+            return internal_promise;
+          };
+        })(number_of_requests);
+        
+        // Call many background operations
+        // The problem is that we don't want this code to used aysnc await!
+        // From this function's point of view, cb is not even async!
+        const times = (num, cb) => {
+          for (let i = 0; i < num; i++) {
+            cb();
+          }
+        };
+        
+        const arr_times = [];
+        
+        times(number_of_requests, async () => {
+          await mkDb();
+
+          // This is the implementation core, we are awaiting on a single promise
+          // handled by the closure
+          await sync();     
+
+          arr_times.push(new Date().getTime());
+        
+          if(arr_times.length === number_of_requests) {
+            const diff = arr_times[number_of_requests - 1] - arr_times[0];
+            console.log(diff < 10 ? 'Success' : 'Failure');
+          }
+        });   
+    },
+  },
   {
     categoryId: CodeTypesEnum.PATTERNS,
     title: "Modern Memoize",
