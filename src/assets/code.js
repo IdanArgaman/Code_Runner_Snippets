@@ -174,13 +174,21 @@ export default [{
         title: "Timed out promise",
         description: "Simulating a timed out promise using Promise.race",
         code: () => {
+
+            class ValidationError extends Error {
+                constructor(message) {
+                  super(message);
+                  this.name = "ValidationError";
+                }
+              }
+
             // Wrap "setTimeout" in a promise such that if
             // the timeout completes, the promise is rejected
 
             const timeout = (delay = 30000) => {
                 return new Promise((resolve, reject) => {
                     let rejectWithError = () => {
-                        reject(new Error('Timed out!'));
+                        reject(new ValidationError('Timed out!'));
                     };
 
                     setTimeout(rejectWithError, delay);
@@ -213,7 +221,11 @@ export default [{
                     // Either the timeout occurred or some other error.
                     // Would need to check the method or use a custom
                     // `Error` subclass in `timeout`
-                    console.error('request error', e);
+                    if(e instanceof ValidationError) {
+                        console.error('Time Out!', e);
+                    } else {
+                        console.error('Request Error', e);
+                    }
                 });
 
         }
@@ -311,7 +323,7 @@ export default [{
                 // Note that we initialize the accumulator to be an empty object
             }, {});
 
-            console.log(carsObj); // => { BMW: 2, Benz: 2, Tesla: 1, Toyota: 1 }
+            console.log(JSON.stringify(carsObj)); // => { BMW: 2, Benz: 2, Tesla: 1, Toyota: 1 }
         }
     },
     {
