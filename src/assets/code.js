@@ -15,63 +15,141 @@ export default [
     description: `We have a some background operations that finish at different times,
     we want to execute code when all of them gets finished!`,
     code: () => {
-        const number_of_requests = 10;
+      const number_of_requests = 10;
 
-        // Background operation resolved within 1 second
-        const mkDb = () =>
-          new Promise((resolve) =>
-            setTimeout(() => resolve(), Math.floor(Math.random() * 1000))
-          );
-        
-        // A colsue - encapsulating a single promise that gets resolved
-        // only when the closure gets called a defined number of times!
-        const sync = ((num) => {
-          let internal_resolve = null;
-          let call_count = 0;
+      // Background operation resolved within 1 second
+      const mkDb = () =>
+        new Promise((resolve) =>
+          setTimeout(() => resolve(), Math.floor(Math.random() * 1000))
+        );
 
-          const internal_promise = new Promise(
-            // Saving the promise resolve function at the closure context 
-            resolve => internal_resolve = resolve
-          );
-        
-          return () => {
-            call_count++;
-            // Call number reached - resolve!
-            if (call_count === num) {
-              internal_resolve();
-            }
-        
-            // return the closure promise!
-            return internal_promise;
-          };
-        })(number_of_requests);
-        
-        // Call many background operations
-        // The problem is that we don't want this code to used aysnc await!
-        // From this function's point of view, cb is not even async!
-        const times = (num, cb) => {
-          for (let i = 0; i < num; i++) {
-            cb();
+      // A colsue - encapsulating a single promise that gets resolved
+      // only when the closure gets called a defined number of times!
+      const sync = ((num) => {
+        let internal_resolve = null;
+        let call_count = 0;
+
+        const internal_promise = new Promise(
+          // Saving the promise resolve function at the closure context
+          (resolve) => (internal_resolve = resolve)
+        );
+
+        return () => {
+          call_count++;
+          // Call number reached - resolve!
+          if (call_count === num) {
+            internal_resolve();
           }
+
+          // return the closure promise!
+          return internal_promise;
         };
-        
-        const arr_times = [];
-        
-        times(number_of_requests, async () => {
-          await mkDb();
+      })(number_of_requests);
 
-          // This is the implementation core, we are awaiting on a single promise
-          // handled by the closure
-          await sync();     
+      // Call many background operations
+      // The problem is that we don't want this code to used aysnc await!
+      // From this function's point of view, cb is not even async!
+      const times = (num, cb) => {
+        for (let i = 0; i < num; i++) {
+          cb();
+        }
+      };
 
-          arr_times.push(new Date().getTime());
-        
-          if(arr_times.length === number_of_requests) {
-            const diff = arr_times[number_of_requests - 1] - arr_times[0];
-            console.log(diff < 10 ? 'Success' : 'Failure');
-          }
-        });   
+      const arr_times = [];
+
+      times(number_of_requests, async () => {
+        await mkDb();
+
+        // This is the implementation core, we are awaiting on a single promise
+        // handled by the closure
+        await sync();
+
+        arr_times.push(new Date().getTime());
+
+        if (arr_times.length === number_of_requests) {
+          const diff = arr_times[number_of_requests - 1] - arr_times[0];
+          console.log(diff < 10 ? "Success" : "Failure");
+        }
+      });
     },
+  },
+  {
+      categoryId: 'Snippet',
+      title: "",
+      description: "",
+      code: () => {
+
+        // Reference: https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-promise-27fc71e77261
+
+        // A cancellable promise utility that you can use to wrap any promise
+        // for example, to handle network requests
+        // speculation(fn: SpecFunction, shouldCancel: Promise) => Promise
+
+        const speculation = (
+            // This is the handler function the user 
+            // passes to the promise, this handler function 
+            // will recieve the regular "resolve" and "reject" but also onCancel
+            fn,
+            // The use provides a cancel promise
+            // when the user will resolve it the handleCancel will be called
+            cancel = Promise.reject()   // Don't cancel by default
+          ) => new Promise((resolve, reject) => {
+        
+            // On cancel is a function that takes a function that 
+            // will be called when the cancel promise gets resolved
+            const onCancel = (handleCancel) => cancel.then(
+                handleCancel,
+                // Ignore expected cancel rejections
+                () => {}
+              )
+              // handle onCancel errors
+              .catch(e => reject(e));
+          
+            // fn is provided with the regular resolve, reject, but also onCancel callback
+            // that will be called when the provided cancel promise is resolved
+            fn(resolve, reject, onCancel);
+          });
+
+        // We want the caller to wait to be able to cancel it!
+        const wait = (
+            time,
+            // The user should provide a promise that when resolved
+            // it would cancel the operation! We listen to this cancel token.
+            cancel = Promise.reject() 
+          ) => speculation((resolve, reject, 
+            // speculation wrapps a promise so it provides our function a resolve
+            // and reject function as regular but also an onCancel handler
+            // that will be called when the user decided to resolve its cancel promise
+            onCancel) => {
+
+            // Simulate an async process - this is the operation's body
+            const timer = setTimeout(resolve, time);
+          
+            // Provide onCancel callback with handler!
+            // When the cancel promise gets resolved - this function would be called!
+            onCancel(() => {
+              clearTimeout(timer);
+              reject(new Error('Cancelled'));
+            });
+          }, 
+          // The cancellation promise is passed to speculation
+          // when resolved, onCancel will be called 
+          cancel); 
+
+
+          // USE
+
+          // The cancel token will be resolved in 500 seconds
+          wait(200, wait(500) /* this call to wait is not provided with a cancel token */).then(
+            () => console.log('Hello!'),
+            (e) => console.log(e)
+          ); // 'Hello!'
+          
+          wait(200, wait(50)).then(
+            () => console.log('Hello!'),
+            (e) => console.log(e)
+          ); // [Error: Cancelled]
+      }
   },
   {
     categoryId: CodeTypesEnum.PATTERNS,
@@ -237,6 +315,7 @@ export default [
     title: "Timed out promise",
     description: "Simulating a timed out promise using Promise.race",
     code: () => {
+      // Reference: https://advancedweb.hu/how-to-add-timeout-to-a-promise-in-javascript/
       class ValidationError extends Error {
         constructor(message) {
           super(message);
@@ -254,6 +333,7 @@ export default [
           };
 
           setTimeout(rejectWithError, delay);
+          // Also: setTimeout(reject, delay, new ValidationError("Timed out!"));
         });
       };
 
