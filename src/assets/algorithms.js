@@ -131,6 +131,31 @@ export default [
   },
   {
     categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Maximum sub array problem - clever!",
+    description: "Printing the maximum sub clever solution",
+    code: () => {
+      const nums = [-1, 5, -1, -5, 3, -3, 4, 2, 2, -8, 9, 1, 4, -3];
+
+      let maxSum = -Infinity;
+      let currentSum = 0;
+
+      // iterate through the nums, store sub-problems result
+      for (let i = 0; i < nums.length; i++) {
+        //cumulating answers to the top
+
+        //compare currentSum add current number
+        //with current number and store the maximum value
+        currentSum = Math.max(nums[i], currentSum + nums[i]);
+
+        //compare maxSum with currentSum and store the greater value
+        maxSum = Math.max(currentSum, maxSum);
+      }
+
+      return maxSum;
+    },
+  },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
     title:
       "Smart stack - a stack that tracks the minimum item within it and allow getting it O(1)",
     description: `In addition to support of push, pop methods as a regular stack, the stack provides getMin
@@ -299,105 +324,64 @@ export default [
       console.log("Sum [0..5]: " + getSum(tree, 5)); // 6 elements sum
     },
   },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Can Jump Problem",
+    description: `
+    You are given an integer array nums. You are initially positioned at the array's first index, 
+    and each element in the array represents your maximum jump length at that position.
+    Return true if you can reach the last index, or false otherwise.
+
+    Solution:
+
+    Imagine you have a car, and you have some distance to travel (the length of the array). This car has 
+    some amount of gasoline, and as long as it has gasoline, it can keep traveling on this road (the array).
+    Every time we move up one element in the array, we subtract one unit of gasoline. However, every time
+    we find an amount of gasoline that is !!!GREATER!!! than our current amount, we "gas up" our car by
+    replacing our current amount of gasoline with this new amount. We keep repeating this process until
+    we either run out of gasoline (and return false), or we reach the end with just enough gasoline 
+    (or more to spare), in which case we return true.
+
+    Note: We can let our gas tank get to zero as long as we are able to gas up at that immediate location
+    (element in the array) that our car is currently at.
+
+    `,
+    code: () => {
+      function canJump(nums) {
+        let gas = 0;
+
+        for(n of nums) {
+            if (gas < 0)
+                return false;
+            else if (n > gas) {
+              gas = n
+            }
+            gas -= 1
+        }
+            
+        return true;
+      }
+
+      console.log(canJump([2,3,1,1,4]));
+      console.log(canJump([2,0,0,1,4]));
+      console.log(canJump([1,0,5,1,4]));
+    },
+  },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Palindrom - One Liner",
+    description: ``,
+    code: () => {
+      const str = 'abcdXdcba';
+      let rev = str.split("").reverse().join("");
+      console.log(rev === str);
+
+      const str2 = 'abcdXXcba';
+      let rev2 = str.split("").reverse().join("");
+      console.log(rev2 === str2);
+    },
+  },
 ];
 
 // Find sub array with a given sum: https://www.geeksforgeeks.org/find-subarray-with-given-sum/
-
-/*
-https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
-
-------------------------------------------------------------------
-
-Minimum heap from React scheduler code:
-taken from (https://programmer.group/exploring-the-inner-of-react-postmessage-scheduler.html)
-Note the code is written in flow, so we must convert it to JS:
-
-type Heap = Array<Node>;
-type Node = {|
-  id: number,
-  sortIndex: number,
-|};
-
-//////////////////////
-// Pushing the heap //
-//////////////////////
-
-export function push(heap: Heap, node: Node): void {
-  const index = heap.length;	// index will become the index of the element we push next line
-  heap.push(node);				// Push
-  siftUp(heap, node, index);	// Then sort, note we provide the index of the element we've just pushed
-}
-
-function siftUp(heap, node, i) {
-  let index = i;
-  while (true) {
-    const parentIndex = (index - 1) >>> 1;
-    const parent = heap[parentIndex];
-    if (parent !== undefined && compare(parent, node) > 0) {
-      // The parent is larger. Swap positions.
-      heap[parentIndex] = node;
-      heap[index] = parent;
-      index = parentIndex;
-    } else {
-      // The parent is smaller. Exit.
-      return;
-    }
-  }
-}
-
-function compare(a, b) {
-  // Compare sort index first, then task id.
-  const diff = a.sortIndex - b.sortIndex;
-  return diff !== 0 ? diff : a.id - b.id;
-}
-
-/////////////////////
-// Poping the heap //
-/////////////////////
-
-export function pop(heap: Heap): Node | null {
-  const first = heap[0];
-  if (first !== undefined) {
-    const last = heap.pop();
-    if (last !== first) {
-      heap[0] = last;
-      siftDown(heap, last, 0);
-    }
-    return first;
-  } else {
-    return null;
-  }
-}
-
-function siftDown(heap, node, i) {
-  let index = i;
-  const length = heap.length;
-  while (index < length) {
-    const leftIndex = (index + 1) * 2 - 1;
-    const left = heap[leftIndex];
-    const rightIndex = leftIndex + 1;
-    const right = heap[rightIndex];
-
-    // If the left or right node is smaller, swap with the smaller of those.
-    if (left !== undefined && compare(left, node) < 0) {
-      if (right !== undefined && compare(right, left) < 0) {
-        heap[index] = right;
-        heap[rightIndex] = node;
-        index = rightIndex;
-      } else {
-        heap[index] = left;
-        heap[leftIndex] = node;
-        index = leftIndex;
-      }
-    } else if (right !== undefined && compare(right, node) < 0) {
-      heap[index] = right;
-      heap[rightIndex] = node;
-      index = rightIndex;
-    } else {
-      // Neither child is smaller. Exit.
-      return;
-    }
-  }
-}
-------------------------------------------------------------------
-*/
+// https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
