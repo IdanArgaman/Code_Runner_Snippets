@@ -969,4 +969,44 @@ export default [
       }
     },
   },
+  {
+    categoryId: CodeTypesEnum.BLACK_BELT,
+    title: "Finout Fetcher Question",
+    description: `We have a function that takes an array IDs and fetch them from the remote by
+    async opertation, we want to cache this function so known IDs results are taken from the cache`,
+    code: async () => {
+      const getDataCallSpy = {}
+      const cache = {};
+      
+      const getData = (id) => {
+        const m = Math.random() * 3000;
+        getDataCallSpy[id] = (getDataCallSpy[id] ?? 0) + 1;
+        return new Promise(resolve => setTimeout(resolve(m), m));
+      }
+
+      const fetcher = (ids) => {
+          const results = [];
+          
+          for(const id of ids) {
+            if(!(id in cache)) {
+              console.log(`${id} not in cache`);
+              cache[id] = getData(id);
+            } else {
+              console.log(`${id} in cache`);
+            }
+            
+            results.push(cache[id]);
+          }
+          return results;
+      }
+
+      const r1 = await Promise.all(fetcher([1,2,3]));
+      const r2 = await Promise.all(fetcher([1,3,4,5]));
+      
+      console.log(`Result 1: ${r1}`)
+      console.log(`Result 2: ${r2}`)
+      console.log(`Cache: ${JSON.stringify(cache)}`)
+      console.log(`Call Spy: ${JSON.stringify(getDataCallSpy)}`)
+    }   
+  },
 ];
