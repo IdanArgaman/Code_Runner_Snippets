@@ -468,6 +468,28 @@ export default [
       console.log(result ? `Found: ${result}` : 'Not found');      
     },
   },
-];
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Remove specific elements from array without using new array",
+    description: `The challenge is using the current array`,
+    code: () => {
+      const arr = [1,2,3,4,5,1,2,3,4,5,1,2,3,4,5];
+      
+      const numberToRemove = 1;
+      let l =  arr.length;
+      let occurs = 0;
 
-// https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
+      for(let i = 0; i < l; i++) {
+        if(arr[i] === numberToRemove) {
+          occurs++;
+          for(let j = i; j < l; j++) {
+            arr[j] = arr[j+1];
+          }
+          i--;  // We've shortend the array so we start from the existing poisition
+                // because now there is a new number there!
+        }
+      }
+      console.log(arr.slice(0, arr.length - occurs));
+    },
+  },
+];
