@@ -369,6 +369,41 @@ export default [
   },
   {
     categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Can Jump Problem - Reversed Solution",
+    
+    description: `We start from the end of the array. At each stage we determine how much steps
+    are needed to get to the item after the current position. At the first iteration, there are no
+    numbers after the current position, so the required steps are 0. If the current step is greater/equal
+    than the required steps, we reset the requiredSteps to 1 and move next. If the current step is
+    less than the required steps, we increase the requiredSteps and move next.
+    If we arrive to the start of the array, and the current step is greater/equal the required steps
+    we return true, otherwise a false is returned!`,
+
+    code: () => {
+      function canJump(nums) {
+        let requiredSteps = 0;
+        let length = nums.length - 1;
+
+        for(let i = 0; i <= length; i++) {
+           if(nums[length - i] >= requiredSteps) {
+              requiredSteps = 0;
+              if(i === length) {
+                return true;
+              }
+           } 
+           requiredSteps++;
+        }
+            
+        return false;
+      }
+
+      console.log(canJump([2,3,1,1,4]));
+      console.log(canJump([2,0,0,1,4]));
+      console.log(canJump([2,0,2,0,1]));
+    },
+  },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
     title: "Palindrom - One Liner",
     description: ``,
     code: () => {
