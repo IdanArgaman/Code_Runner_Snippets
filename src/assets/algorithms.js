@@ -370,7 +370,7 @@ export default [
   {
     categoryId: CodeTypesEnum.ALGORITHM,
     title: "Can Jump Problem - Reversed Solution",
-    
+
     description: `We start from the end of the array. At each stage we determine how much steps
     are needed to get to the item after the current position. At the first iteration, there are no
     numbers after the current position, so the required steps are 0. If the current step is greater/equal
@@ -437,7 +437,37 @@ export default [
       console.log(`Max number ${maxNum} and max occurances ${maxOccur}`);      
     },
   },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Max array with a given sum",
+    description: ``,
+    code: () => {
+      const arr = [15, 2, 4, 8, 9, 5, 10, 22];
+
+      function subArrayWithSum(arr) {
+        let sum = 0;
+        let subArrWithSum = [];
+        let targetSum = 23;
+
+        for(let i = 0; i < arr.length; i++) {
+          for(let j = i; j < arr.length; j++) {
+            sum += arr[j];
+            subArrWithSum.push(arr[j]);
+            if(sum > targetSum) {
+              subArrWithSum = [];
+              sum = 0;
+              break;
+            } else if(sum === targetSum) {
+              return subArrWithSum;
+            }
+          }
+        }
+      }
+      
+      const result = subArrayWithSum(arr);
+      console.log(result ? `Found: ${result}` : 'Not found');      
+    },
+  },
 ];
 
-// Find sub array with a given sum: https://www.geeksforgeeks.org/find-subarray-with-given-sum/
 // https://www.log2base2.com/data-structures/array/remove-a-specific-element-from-array.html
