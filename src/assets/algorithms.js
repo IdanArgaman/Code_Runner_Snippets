@@ -416,6 +416,27 @@ export default [
       console.log(rev2 === str2);
     },
   },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Max number of occurances",
+    description: ``,
+    code: () => {
+      const arr = [1,1,2,2,2,3,3,1,1,4,4,2,2,2,5,6,5,1,1,1,1,1];
+      let maxOccur = -Infinity;
+      let maxNum = null;
+      let occurs = {};
+
+      for(const num of arr) {
+        occurs[num] = (occurs[num] ?? 0 ) + 1;
+        if(occurs[num] > maxOccur) {
+          maxOccur = occurs[num];
+          maxNum = num;
+        }
+      }
+
+      console.log(`Max number ${maxNum} and max occurances ${maxOccur}`);      
+    },
+  },
 ];
 
 // Find sub array with a given sum: https://www.geeksforgeeks.org/find-subarray-with-given-sum/
