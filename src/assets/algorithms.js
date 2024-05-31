@@ -492,4 +492,102 @@ export default [
       console.log(arr.slice(0, arr.length - occurs));
     },
   },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Find string A anagrams in a specific string",
+    description: "",
+    code: () => {
+      /*
+        Question Source: https://leetcode.com/problems/find-all-anagrams-in-a-string/
+
+        Given two strings s and p, return an array of all the start indices of p's anagrams in s. 
+        You may return the answer in any order.
+
+        An Anagram is a word or phrase formed by rearranging the letters of a different word or 
+        phrase, typically using all the original letters exactly once.
+
+        In other words: Given string (P) and string (S). Find string (A) in string (S) 
+        where (A) is an array all anagrams of (P).
+      */
+
+        function checkAnangramInString(s, p) {
+          const results = [];
+        
+          // Inefficient but one liner anagram check in JS
+          function checkAnangram(s1, s2) {
+            return s1.split('').sort().join('') == s2.split('').sort().join('');
+          }
+        
+          for (let i = 0; i <= s.length - p.length; i++) {
+            const sub = s.substring(i, i + p.length);
+            if (checkAnangram(sub, p)) {
+              results.push(i);
+            }
+          }
+        
+          return results;
+        }
+        
+        console.log(checkAnangramInString('cbaebabacd', 'abc'));
+        console.log(checkAnangramInString('axbxcx', 'abc'));
+        console.log(checkAnangramInString('abab', 'ab'));
+    }
+  },
+  {
+    categoryId: 'Snippet',
+    title: "",
+    description: "",
+    code: () => {
+      // Online Javascript Editor for free
+      // Write, Edit and Run your Javascript code using JS Online Compiler
+      // SOURCE: https://www.geeksforgeeks.org/print-pairs-anagrams-given-array-strings/
+
+      // A more efficient function to check if two string are anagrams
+      // instead of the one liner
+      function areAnagram(str1, str2){
+      
+        const map = {}; 
+
+        let i = 0;
+
+      if (str1.length !== str2.length)
+            return false;
+
+        while(i < str1.length && i < str2.length) {
+            map[str1[i]] = (map[str1[i]] ?? 0) + 1;
+            map[str2[i]] = (map[str2[i]] ?? 0) + 1;
+            i += 1;
+        }
+
+        return Object.values(map).filter(v => v > 0);   
+      }
+
+      function areAnagramNaive(str1, str2){
+        return str1.split('').sort().join('') === str2.split('').sort().join('');
+      }
+
+      function findAllAnagrams(arr, n) {
+        // We iterate the array and compare item i with all items following it
+        for(let i = 0; i < n; i++){ 
+            for(let j = i + 1; j < n; j++){
+                if(areAnagram(arr[i], arr[j])) {
+                    console.log(`'${arr[i]}' is anagram of '${arr[j]}'`)
+                }
+                
+                if(areAnagramNaive(arr[i], arr[j])) {
+                    console.log(`'${arr[i]}' is anagram naive of '${arr[j]}'`)
+                }
+            }
+        }
+      }
+
+      let arr = ["geeksquiz", "geeksforgeeks",
+          "abcd", "forgeeksgeeks", "zuiqkeegs"];
+
+      let n = (arr).length;
+
+      findAllAnagrams(arr, n);
+
+    }
+  }
 ];
