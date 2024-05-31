@@ -31,6 +31,24 @@ export default [
   },
   {
     categoryId: CodeTypesEnum.ALGORITHM,
+    title: "JS indexOf - Sliding window implementation",
+    description: "",
+    code: () => {
+      function indexOf(str, query) {
+        for (let i = 0; i <= str.length - query.length; i++) {
+          if(str.substring(i, query.length + i) === query) {
+            return i;
+          }
+        }
+
+        return -1;
+      }
+
+      console.log(indexOf("bbbbbccaaxxcaq1", "aax"));
+    },
+  },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
     title: "Array pairs that sum to a given K",
     description: `Given an array, print the pairs that their sum gives a result equals to k.
     We can find different implementation here: https://www.geeksforgeeks.org/count-pairs-with-given-sum/`,
@@ -350,21 +368,20 @@ export default [
       function canJump(nums) {
         let gas = 0;
 
-        for(n of nums) {
-            if (gas < 0)
-                return false;
-            else if (n > gas) {
-              gas = n
-            }
-            gas -= 1
+        for (n of nums) {
+          if (gas < 0) return false;
+          else if (n > gas) {
+            gas = n;
+          }
+          gas -= 1;
         }
-            
+
         return true;
       }
 
-      console.log(canJump([2,3,1,1,4]));
-      console.log(canJump([2,0,0,1,4]));
-      console.log(canJump([1,0,5,1,4]));
+      console.log(canJump([2, 3, 1, 1, 4]));
+      console.log(canJump([2, 0, 0, 1, 4]));
+      console.log(canJump([1, 0, 5, 1, 4]));
     },
   },
   {
@@ -384,22 +401,22 @@ export default [
         let requiredSteps = 0;
         let length = nums.length - 1;
 
-        for(let i = 0; i <= length; i++) {
-           if(nums[length - i] >= requiredSteps) {
-              requiredSteps = 0;
-              if(i === length) {
-                return true;
-              }
-           } 
-           requiredSteps++;
+        for (let i = 0; i <= length; i++) {
+          if (nums[length - i] >= requiredSteps) {
+            requiredSteps = 0;
+            if (i === length) {
+              return true;
+            }
+          }
+          requiredSteps++;
         }
-            
+
         return false;
       }
 
-      console.log(canJump([2,3,1,1,4]));
-      console.log(canJump([2,0,0,1,4]));
-      console.log(canJump([2,0,2,0,1]));
+      console.log(canJump([2, 3, 1, 1, 4]));
+      console.log(canJump([2, 0, 0, 1, 4]));
+      console.log(canJump([2, 0, 2, 0, 1]));
     },
   },
   {
@@ -407,12 +424,18 @@ export default [
     title: "Palindrom - One Liner",
     description: ``,
     code: () => {
-      const str = 'abcdXdcba';
-      let rev = str.split("").reverse().join("");
+      const str = "abcdXdcba";
+      let rev = str
+        .split("")
+        .reverse()
+        .join("");
       console.log(rev === str);
 
-      const str2 = 'abcdXXcba';
-      let rev2 = str.split("").reverse().join("");
+      const str2 = "abcdXXcba";
+      let rev2 = str
+        .split("")
+        .reverse()
+        .join("");
       console.log(rev2 === str2);
     },
   },
@@ -421,20 +444,43 @@ export default [
     title: "Max number of occurances",
     description: ``,
     code: () => {
-      const arr = [1,1,2,2,2,3,3,1,1,4,4,2,2,2,5,6,5,1,1,1,1,1];
+      const arr = [
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        1,
+        1,
+        4,
+        4,
+        2,
+        2,
+        2,
+        5,
+        6,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+      ];
       let maxOccur = -Infinity;
       let maxNum = null;
       let occurs = {};
 
-      for(const num of arr) {
-        occurs[num] = (occurs[num] ?? 0 ) + 1;
-        if(occurs[num] > maxOccur) {
+      for (const num of arr) {
+        occurs[num] = (occurs[num] ?? 0) + 1;
+        if (occurs[num] > maxOccur) {
           maxOccur = occurs[num];
           maxNum = num;
         }
       }
 
-      console.log(`Max number ${maxNum} and max occurances ${maxOccur}`);      
+      console.log(`Max number ${maxNum} and max occurances ${maxOccur}`);
     },
   },
   {
@@ -449,23 +495,23 @@ export default [
         let subArrWithSum = [];
         let targetSum = 23;
 
-        for(let i = 0; i < arr.length; i++) {
-          for(let j = i; j < arr.length; j++) {
+        for (let i = 0; i < arr.length; i++) {
+          for (let j = i; j < arr.length; j++) {
             sum += arr[j];
             subArrWithSum.push(arr[j]);
-            if(sum > targetSum) {
+            if (sum > targetSum) {
               subArrWithSum = [];
               sum = 0;
               break;
-            } else if(sum === targetSum) {
+            } else if (sum === targetSum) {
               return subArrWithSum;
             }
           }
         }
       }
-      
+
       const result = subArrayWithSum(arr);
-      console.log(result ? `Found: ${result}` : 'Not found');      
+      console.log(result ? `Found: ${result}` : "Not found");
     },
   },
   {
@@ -473,20 +519,20 @@ export default [
     title: "Remove specific elements from array without using new array",
     description: `The challenge is using the current array`,
     code: () => {
-      const arr = [1,2,3,4,5,1,2,3,4,5,1,2,3,4,5];
-      
+      const arr = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+
       const numberToRemove = 1;
-      let l =  arr.length;
+      let l = arr.length;
       let occurs = 0;
 
-      for(let i = 0; i < l; i++) {
-        if(arr[i] === numberToRemove) {
+      for (let i = 0; i < l; i++) {
+        if (arr[i] === numberToRemove) {
           occurs++;
-          for(let j = i; j < l; j++) {
-            arr[j] = arr[j+1];
+          for (let j = i; j < l; j++) {
+            arr[j] = arr[j + 1];
           }
-          i--;  // We've shortend the array so we start from the existing poisition
-                // because now there is a new number there!
+          i--; // We've shortend the array so we start from the existing poisition
+          // because now there is a new number there!
         }
       }
       console.log(arr.slice(0, arr.length - occurs));
@@ -510,31 +556,40 @@ export default [
         where (A) is an array all anagrams of (P).
       */
 
-        function checkAnangramInString(s, p) {
-          const results = [];
-        
-          // Inefficient but one liner anagram check in JS
-          function checkAnangram(s1, s2) {
-            return s1.split('').sort().join('') == s2.split('').sort().join('');
-          }
-        
-          for (let i = 0; i <= s.length - p.length; i++) {
-            const sub = s.substring(i, i + p.length);
-            if (checkAnangram(sub, p)) {
-              results.push(i);
-            }
-          }
-        
-          return results;
+      function checkAnangramInString(s, p) {
+        const results = [];
+
+        // Inefficient but one liner anagram check in JS
+        function checkAnangram(s1, s2) {
+          return (
+            s1
+              .split("")
+              .sort()
+              .join("") ==
+            s2
+              .split("")
+              .sort()
+              .join("")
+          );
         }
-        
-        console.log(checkAnangramInString('cbaebabacd', 'abc'));
-        console.log(checkAnangramInString('axbxcx', 'abc'));
-        console.log(checkAnangramInString('abab', 'ab'));
-    }
+
+        for (let i = 0; i <= s.length - p.length; i++) {
+          const sub = s.substring(i, i + p.length);
+          if (checkAnangram(sub, p)) {
+            results.push(i);
+          }
+        }
+
+        return results;
+      }
+
+      console.log(checkAnangramInString("cbaebabacd", "abc"));
+      console.log(checkAnangramInString("axbxcx", "abc"));
+      console.log(checkAnangramInString("abab", "ab"));
+    },
   },
   {
-    categoryId: 'Snippet',
+    categoryId: "Snippet",
     title: "",
     description: "",
     code: () => {
@@ -544,50 +599,111 @@ export default [
 
       // A more efficient function to check if two string are anagrams
       // instead of the one liner
-      function areAnagram(str1, str2){
-      
-        const map = {}; 
+      function areAnagram(str1, str2) {
+        const map = {};
 
         let i = 0;
 
-      if (str1.length !== str2.length)
-            return false;
+        if (str1.length !== str2.length) return false;
 
-        while(i < str1.length && i < str2.length) {
-            map[str1[i]] = (map[str1[i]] ?? 0) + 1;
-            map[str2[i]] = (map[str2[i]] ?? 0) + 1;
-            i += 1;
+        while (i < str1.length && i < str2.length) {
+          map[str1[i]] = (map[str1[i]] ?? 0) + 1;
+          map[str2[i]] = (map[str2[i]] ?? 0) + 1;
+          i += 1;
         }
 
-        return Object.values(map).filter(v => v > 0);   
+        return Object.values(map).filter((v) => v > 0);
       }
 
-      function areAnagramNaive(str1, str2){
-        return str1.split('').sort().join('') === str2.split('').sort().join('');
+      function areAnagramNaive(str1, str2) {
+        return (
+          str1
+            .split("")
+            .sort()
+            .join("") ===
+          str2
+            .split("")
+            .sort()
+            .join("")
+        );
       }
 
       function findAllAnagrams(arr, n) {
         // We iterate the array and compare item i with all items following it
-        for(let i = 0; i < n; i++){ 
-            for(let j = i + 1; j < n; j++){
-                if(areAnagram(arr[i], arr[j])) {
-                    console.log(`'${arr[i]}' is anagram of '${arr[j]}'`)
-                }
-                
-                if(areAnagramNaive(arr[i], arr[j])) {
-                    console.log(`'${arr[i]}' is anagram naive of '${arr[j]}'`)
-                }
+        for (let i = 0; i < n; i++) {
+          for (let j = i + 1; j < n; j++) {
+            if (areAnagram(arr[i], arr[j])) {
+              console.log(`'${arr[i]}' is anagram of '${arr[j]}'`);
             }
+
+            if (areAnagramNaive(arr[i], arr[j])) {
+              console.log(`'${arr[i]}' is anagram naive of '${arr[j]}'`);
+            }
+          }
         }
       }
 
-      let arr = ["geeksquiz", "geeksforgeeks",
-          "abcd", "forgeeksgeeks", "zuiqkeegs"];
+      let arr = [
+        "geeksquiz",
+        "geeksforgeeks",
+        "abcd",
+        "forgeeksgeeks",
+        "zuiqkeegs",
+      ];
 
-      let n = (arr).length;
+      let n = arr.length;
 
       findAllAnagrams(arr, n);
+    },
+  },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Find all permutations in array",
+    description: "",
+    code: () => {
+      function permute(nums) {
+        let result = [];
 
+        // As usual, we start the recursion by defnining its stops
+        if (nums.length === 0) return [];
+        if (nums.length === 1) return [nums];
+
+        for (let i = 0; i < nums.length; i++) {
+          // Get current item
+          const currentNum = nums[i];
+
+          // Exclude the item from the nums arrays
+          const remainingNums = nums.slice(0, i).concat(nums.slice(i + 1));
+
+          // Permute the array that excludes item
+          const remainingNumsPermuted = permute(remainingNums);
+
+          // Iterate the permuted array and add item to it
+          for (let j = 0; j < remainingNumsPermuted.length; j++) {
+            const permutedArray = [currentNum].concat(remainingNumsPermuted[j]);
+            result.push(permutedArray);
+          }
+        }
+
+        return result;
+      }
+
+      const results = permute("abcde".split(""));
+      results.forEach(r => console.log(r));
+    },
+  },
+  {
+    categoryId: CodeTypesEnum.ALGORITHM,
+    title: "Fibonacci no recursion",
+    description: "",
+    code: () => {
+      const LENGTH = 10;
+      const fib = [0, 1];
+      for (let i = 2; i <= LENGTH; i++) {
+        fib.push(fib[i - 2] + fib[i - 1]);
+      }
+
+      console.log(fib);
     }
   }
 ];
