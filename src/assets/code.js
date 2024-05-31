@@ -74,82 +74,90 @@ export default [
     },
   },
   {
-      categoryId: 'Snippet',
-      title: "",
-      description: "",
-      code: () => {
+    categoryId: "Snippet",
+    title: "",
+    description: "",
+    code: () => {
+      // Reference: https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-promise-27fc71e77261
 
-        // Reference: https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-promise-27fc71e77261
+      // A cancellable promise utility that you can use to wrap any promise
+      // for example, to handle network requests
+      // speculation(fn: SpecFunction, shouldCancel: Promise) => Promise
 
-        // A cancellable promise utility that you can use to wrap any promise
-        // for example, to handle network requests
-        // speculation(fn: SpecFunction, shouldCancel: Promise) => Promise
-
-        const speculation = (
-            // This is the handler function the user 
-            // passes to the promise, this handler function 
-            // will recieve the regular "resolve" and "reject" but also onCancel
-            fn,
-            // The use provides a cancel promise
-            // when the user will resolve it the handleCancel will be called
-            cancel = Promise.reject()   // Don't cancel by default
-          ) => new Promise((resolve, reject) => {
-        
-            // On cancel is a function that takes a function that 
-            // will be called when the cancel promise gets resolved
-            const onCancel = (handleCancel) => cancel.then(
+      const speculation = (
+        // This is the handler function the user
+        // passes to the promise, this handler function
+        // will recieve the regular "resolve" and "reject" but also onCancel
+        fn,
+        // The use provides a cancel promise
+        // when the user will resolve it the handleCancel will be called
+        cancel = Promise.reject() // Don't cancel by default
+      ) =>
+        new Promise((resolve, reject) => {
+          // On cancel is a function that takes a function that
+          // will be called when the cancel promise gets resolved
+          const onCancel = (handleCancel) =>
+            cancel
+              .then(
                 handleCancel,
                 // Ignore expected cancel rejections
                 () => {}
               )
               // handle onCancel errors
-              .catch(e => reject(e));
-          
-            // fn is provided with the regular resolve, reject, but also onCancel callback
-            // that will be called when the provided cancel promise is resolved
-            fn(resolve, reject, onCancel);
-          });
+              .catch((e) => reject(e));
 
-        // We want the caller to wait to be able to cancel it!
-        const wait = (
-            time,
-            // The user should provide a promise that when resolved
-            // it would cancel the operation! We listen to this cancel token.
-            cancel = Promise.reject() 
-          ) => speculation((resolve, reject, 
+          // fn is provided with the regular resolve, reject, but also onCancel callback
+          // that will be called when the provided cancel promise is resolved
+          fn(resolve, reject, onCancel);
+        });
+
+      // We want the caller to wait to be able to cancel it!
+      const wait = (
+        time,
+        // The user should provide a promise that when resolved
+        // it would cancel the operation! We listen to this cancel token.
+        cancel = Promise.reject()
+      ) =>
+        speculation(
+          (
+            resolve,
+            reject,
             // speculation wrapps a promise so it provides our function a resolve
             // and reject function as regular but also an onCancel handler
             // that will be called when the user decided to resolve its cancel promise
-            onCancel) => {
-
+            onCancel
+          ) => {
             // Simulate an async process - this is the operation's body
             const timer = setTimeout(resolve, time);
-          
+
             // Provide onCancel callback with handler!
             // When the cancel promise gets resolved - this function would be called!
             onCancel(() => {
               clearTimeout(timer);
-              reject(new Error('Cancelled'));
+              reject(new Error("Cancelled"));
             });
-          }, 
+          },
           // The cancellation promise is passed to speculation
-          // when resolved, onCancel will be called 
-          cancel); 
+          // when resolved, onCancel will be called
+          cancel
+        );
 
+      // USE
 
-          // USE
+      // The cancel token will be resolved in 500 seconds
+      wait(
+        200,
+        wait(500) /* this call to wait is not provided with a cancel token */
+      ).then(
+        () => console.log("Hello!"),
+        (e) => console.log(e)
+      ); // 'Hello!'
 
-          // The cancel token will be resolved in 500 seconds
-          wait(200, wait(500) /* this call to wait is not provided with a cancel token */).then(
-            () => console.log('Hello!'),
-            (e) => console.log(e)
-          ); // 'Hello!'
-          
-          wait(200, wait(50)).then(
-            () => console.log('Hello!'),
-            (e) => console.log(e)
-          ); // [Error: Cancelled]
-      }
+      wait(200, wait(50)).then(
+        () => console.log("Hello!"),
+        (e) => console.log(e)
+      ); // [Error: Cancelled]
+    },
   },
   {
     categoryId: CodeTypesEnum.PATTERNS,
@@ -975,38 +983,81 @@ export default [
     description: `We have a function that takes an array IDs and fetch them from the remote by
     async opertation, we want to cache this function so known IDs results are taken from the cache`,
     code: async () => {
-      const getDataCallSpy = {}
+      const getDataCallSpy = {};
       const cache = {};
-      
+
       const getData = (id) => {
         const m = Math.random() * 3000;
         getDataCallSpy[id] = (getDataCallSpy[id] ?? 0) + 1;
-        return new Promise(resolve => setTimeout(resolve(m), m));
-      }
+        return new Promise((resolve) => setTimeout(resolve(m), m));
+      };
 
       const fetcher = (ids) => {
-          const results = [];
-          
-          for(const id of ids) {
-            if(!(id in cache)) {
-              console.log(`${id} not in cache`);
-              cache[id] = getData(id);
-            } else {
-              console.log(`${id} in cache`);
-            }
-            
-            results.push(cache[id]);
+        const results = [];
+
+        for (const id of ids) {
+          if (!(id in cache)) {
+            console.log(`${id} not in cache`);
+            cache[id] = getData(id);
+          } else {
+            console.log(`${id} in cache`);
           }
-          return results;
+
+          results.push(cache[id]);
+        }
+        return results;
+      };
+
+      const r1 = await Promise.all(fetcher([1, 2, 3]));
+      const r2 = await Promise.all(fetcher([1, 3, 4, 5]));
+
+      console.log(`Result 1: ${r1}`);
+      console.log(`Result 2: ${r2}`);
+      console.log(`Cache: ${JSON.stringify(cache)}`);
+      console.log(`Call Spy: ${JSON.stringify(getDataCallSpy)}`);
+    },
+  },
+  {
+    categoryId: "Snippet",
+    title: "Create curreid function from function",
+    description:
+      "We take a function as an argument and make that function curried",
+    code: () => {
+      function toCurried(func) {
+        // The number of args needed to execute args
+        const fullArgCount = func.length;
+
+        // We define a function we can call within the returned function
+        function createSubFunction(curriedArgs) {
+
+          // The idea is to collect args until we get the number of args
+          // that are needed to execute "func"
+          return function(...args) {
+            const newCurriedArguments = curriedArgs.concat(args);
+            
+            if (newCurriedArguments.length > fullArgCount) {
+              throw new Error("Too many arguments");
+            }
+
+            if (newCurriedArguments.length === fullArgCount) {
+              return func(...newCurriedArguments);
+            }
+
+            // If not enough args, create a new function passing the arguments until now
+            return createSubFunction(newCurriedArguments);     
+          };
+        }
+
+        // We first call create sub function without args array
+        return createSubFunction([]);
       }
 
-      const r1 = await Promise.all(fetcher([1,2,3]));
-      const r2 = await Promise.all(fetcher([1,3,4,5]));
-      
-      console.log(`Result 1: ${r1}`)
-      console.log(`Result 2: ${r2}`)
-      console.log(`Cache: ${JSON.stringify(cache)}`)
-      console.log(`Call Spy: ${JSON.stringify(getDataCallSpy)}`)
-    }   
+      function add(x, y) {
+        console.log(x + y);
+      }
+
+      const result = toCurried(add)(1)(2);
+      console.log(result);
+    },
   },
 ];
